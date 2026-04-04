@@ -3,6 +3,7 @@ import cors from 'cors';
 import catRouter from './routes/cat-router.js';
 import userRouter from './routes/user-router.js';
 import authRouter from './routes/auth-router.js';
+import {notFoundHandler, errorHandler} from './middlewares/error-handlers.js';
 
 const app = express();
 
@@ -18,5 +19,8 @@ app.use('/uploads', express.static('uploads'));
 app.get('/', (req, res) => {
   res.send('Welcome to my REST API!');
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
