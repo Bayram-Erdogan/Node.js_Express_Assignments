@@ -47,7 +47,10 @@ export const createCat = async (req, res) => {
 
 export const updateCat = async (req, res) => {
   try {
-    const success = await modifyCat(req.body, req.params.id);
+    const currentUser = res.locals.user;
+    if (!currentUser) return res.sendStatus(401);
+
+    const success = await modifyCat(req.body, req.params.id, currentUser);
     if (!success) return res.status(404).json({message: 'Cat not found'});
     res.status(200).json({message: 'Cat updated'});
   } catch (err) {
@@ -57,7 +60,10 @@ export const updateCat = async (req, res) => {
 
 export const deleteCat = async (req, res) => {
   try {
-    const success = await removeCat(req.params.id);
+    const currentUser = res.locals.user;
+    if (!currentUser) return res.sendStatus(401);
+
+    const success = await removeCat(req.params.id, currentUser);
     if (!success) return res.status(404).json({message: 'Cat not found'});
     res.status(200).json({message: 'Cat deleted'});
   } catch (err) {

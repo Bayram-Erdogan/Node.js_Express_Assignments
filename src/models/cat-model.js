@@ -48,23 +48,32 @@ export const addCat = async (cat) => {
   return {cat_id: result.insertId};
 };
 
-export const modifyCat = async (cat, id) => {
+export const modifyCat = async (cat, id, currentUser) => {
   const keys = Object.keys(cat);
   const values = Object.values(cat);
 
   if (keys.length === 0) return false;
 
   const setString = keys.map((key) => `${key} = ?`).join(', ');
-  const sql = `UPDATE wsk_cats SET ${setString} WHERE cat_id = ?`;
+  const isAdmin = currentUser?.role === 'admin';
+  const sql = isAdmin
+    ? `UPDATE wsk_cats SET ${setString} WHERE cat_id = ?`
+    : `UPDATE wsk_cats SET ${setString} WHERE cat_id = ? AND owner = ?`;
 
-  const [result] = await db.execute(sql, [...values, id]);
+  const params = isAdmin
+    ? [...values, id]
+    : [...values, id, currentUser?.user_id];
+  const [result] = await db.execute(sql, params);
 
   return result.affectedRows > 0;
 };
 
-export const removeCat = async (id) => {
-  const [result] = await db.execute('DELETE FROM wsk_cats WHERE cat_id = ?', [
-    id,
-  ]);
+export const removeCat = async (id, currentUser) => {
+  const isAdmin = currentUser?.role === 'admin';
+  const sql = isAdmin
+    ? 'DELETE FROM wsk_cats WHERE cat_id = ?'
+    : 'DELETE FROM wsk_cats WHERE cat_id = ? AND owner = ?';
+  const params = isAdmin ? [id] : [id, currentUser?.user_id];
+  const [result] = await db.execute(sql, params);
   return result.affectedRows > 0;
 };
