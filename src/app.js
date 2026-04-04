@@ -9,6 +9,7 @@ app.use(express.static('public'));
 
 app.use('/api/v1/cats', catRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
   res.send('Welcome to my REST API!');
