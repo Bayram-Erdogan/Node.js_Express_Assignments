@@ -1,31 +1,47 @@
-import express from 'express';
-import multer from 'multer';
-import path from 'path';
-import {
-  getAllCats,
-  getCatById,
-  createCat,
-  updateCat,
-  deleteCat,
-} from '../controllers/cat-controller.js';
+import {addCat, getCat, getCats, updateCatById, deleteCatById} from '../models/cat-model.js';
 
-const router = express.Router();
+export const getAllCats = (req, res) => {
+  res.json(getCats());
+};
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const uniqueName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
-    cb(null, uniqueName);
-  },
-});
+export const getCatById = (req, res) => {
+  const id = Number(req.params.id);
+  const cat = getCat(id);
+  if (!cat) {
+    return res.status(404).json({message: 'Cat not found'});
+  }
+  res.json(cat);
+};
 
-const upload = multer({storage});
+export const postCat = (req, res) => {
+  console.log('postCat body:', req.body);
+  console.log('postCat file:', req.file);
 
-router.get('/', getAllCats);
-router.get('/:id', getCatById);
-router.post('/', upload.single('cat'), createCat);
-router.put('/:id', updateCat);
-router.delete('/:id', deleteCat);
+  const newCat = addCat({
+    ...req.body,
+    filename: req.file?.filename || null,
+  });
 
-export default router;
+  res.status(201).json(newCat);
+};
+
+// Backward-compatible alias if other files still import createCat
+export const createCat = postCat;
+
+export const updateCat = (req, res) => {
+  const id = Number(req.params.id);
+  const updated = updateCatById(id, req.body);
+  if (!updated) {
+    return res.status(404).json({message: 'Cat not found'});
+  }
+  res.json(updated);
+};
+
+export const deleteCat = (req, res) => {
+  const id = Number(req.params.id);
+  const deleted = deleteCatById(id);
+  if (!deleted) {
+    return res.status(404).json({message: 'Cat not found'});
+  }
+  res.json({message: 'Cat deleted', cat: deleted});
+};

@@ -4,7 +4,7 @@ import multer from 'multer';
 import {
   getAllCats,
   getCatById,
-  createCat,
+  postCat,
   updateCat,
   deleteCat,
 } from '../controllers/cat-controller.js';
@@ -15,7 +15,7 @@ const upload = multer({dest: 'uploads/'});
 
 router.get('/', getAllCats);
 router.get('/:id', getCatById);
-router.post('/', upload.single('cat'), createCat);
+router.post('/', upload.single('cat'), postCat);
 router.put('/:id', updateCat);
 router.delete('/:id', deleteCat);
 

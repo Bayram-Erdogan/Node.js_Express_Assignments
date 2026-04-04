@@ -18,3 +18,27 @@ export const addCat = (cat) => {
   cats.push(newCat);
   return newCat;
 };
+
+export const updateCatById = (id, updates) => {
+  const index = cats.findIndex((cat) => cat.cat_id === id);
+  if (index === -1) {
+    return null;
+  }
+
+  cats[index] = {
+    ...cats[index],
+    ...updates,
+  };
+
+  return cats[index];
+};
+
+export const deleteCatById = (id) => {
+  const index = cats.findIndex((cat) => cat.cat_id === id);
+  if (index === -1) {
+    return null;
+  }
+
+  const [deleted] = cats.splice(index, 1);
+  return deleted;
+};
