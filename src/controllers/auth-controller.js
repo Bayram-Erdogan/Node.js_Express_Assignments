@@ -12,7 +12,10 @@ export const postLogin = async (req, res) => {
       return res.sendStatus(401);
     }
 
-    const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+    const passwordMatch = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
     if (!passwordMatch) {
       return res.sendStatus(401);
     }
