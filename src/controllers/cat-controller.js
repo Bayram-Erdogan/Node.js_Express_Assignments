@@ -1,4 +1,10 @@
-import {addCat, getCat, getCats, updateCatById, deleteCatById} from '../models/cat-model.js';
+import {
+  addCat,
+  getCat,
+  getCats,
+  updateCatById,
+  deleteCatById,
+} from '../models/cat-model.js';
 
 export const getAllCats = (req, res) => {
   res.json(getCats());
