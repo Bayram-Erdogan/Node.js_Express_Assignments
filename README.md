@@ -1,50 +1,72 @@
-# Node.js Template
+# Node.js Express Assignments
 
-## Assignment 6
+This repository contains assignment-based development for a Node.js + Express REST API.
 
-### Authentication
+## Branch Review (updated)
 
-- Passwords are hashed with bcrypt in user creation and user update.
-- Login endpoint: POST /api/v1/auth/login
-- Me endpoint: GET /api/v1/auth/me
-- JWT token is signed with JWT_SECRET from .env and expires in 24h.
+All branches were inspected.
 
-### Authorization Rules
+| Branch      | Latest commit | Merged to main | Notes                                                     |
+| ----------- | ------------- | -------------- | --------------------------------------------------------- |
+| Assignment1 | b764779       | yes            | API + static files                                        |
+| Assignment2 | 70e0bca       | yes            | Project restructure + cat/user endpoints                  |
+| Assignment3 | 242e752       | yes            | Latest commit is formatting; branch is not merged to main |
+| Assignment4 | b251040       | yes            | Assignment4 branch added                                  |
+| Assignment5 | 8c28fa6       | yes            | Assignment 5 completed                                    |
+| Assignment6 | 6a843ee       | yes            | Assignment 6 docs and formatting                          |
+| Assignment7 | eb83bf4       | yes            | Error handling + input validation                         |
+| main        | 094c588       | -              | Merge Assignment7                                         |
 
-- Regular user:
-  - Can update/delete only own user record.
-  - Can update/delete only own cats.
-- Admin user:
-  - Can update/delete any user.
-  - Can update/delete any cat.
+## Branch URLs
 
-Authorization is based on decoded token payload in res.locals.user.
+- [main](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/main)
+- [Assignment1](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment1)
+- [Assignment2](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment2)
+- [Assignment3](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment3)
+- [Assignment4](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment4)
+- [Assignment5](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment5)
+- [Assignment6](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment6)
+- [Assignment7](https://github.com/Bayram-Erdogan/Node.js_Express_Assignments/tree/Assignment7)
 
-### Protected Endpoints
+## Current Main Features
 
+Main currently includes Assignment7 changes.
+
+- Centralized JSON error handling middleware.
+- Not-found handler for unknown routes.
+- Request validation and sanitization with express-validator.
+- Multer upload filtering for media files and size limit handling.
+- Authentication and authorization flow from Assignment6 (JWT + role checks).
+
+## Key API Endpoints
+
+- POST /api/v1/auth/login
+- GET /api/v1/auth/me
+- GET /api/v1/users
+- POST /api/v1/users
 - PUT /api/v1/users/:id
 - DELETE /api/v1/users/:id
+- GET /api/v1/cats
+- POST /api/v1/cats
 - PUT /api/v1/cats/:id
 - DELETE /api/v1/cats/:id
-- GET /api/v1/auth/me
 
-Use header:
+## Auth Notes
 
-Authorization: Bearer <token>
+- Passwords are hashed with bcrypt.
+- JWT is signed with JWT_SECRET from .env.
+- Protected routes require header: Authorization: Bearer <token>
 
-### REST Client Examples
+## Run
 
-POST http://localhost:3000/api/v1/auth/login
-content-type: application/json
+1. Install dependencies:
 
-{
-"username": "JohnDoe",
-"password": "to-be-hashed-pw1"
-}
+npm install
 
-GET http://localhost:3000/api/v1/auth/me
-Authorization: Bearer <token>
+2. Start the server:
 
-### CORS
+npm run start
 
-- CORS is enabled with app.use(cors()) in app.
+3. Development mode:
+
+npm run dev
