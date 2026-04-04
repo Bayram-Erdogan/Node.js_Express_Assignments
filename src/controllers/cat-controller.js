@@ -1,25 +1,66 @@
-import {getCats, getCat, addCat} from '../models/cat-model.js';
+import {
+  listAllCats,
+  findCatById,
+  addCat,
+  modifyCat,
+  removeCat,
+  findCatsByUserId,
+} from '../models/cat-model.js';
 
-export const getAllCats = (req, res) => {
-  res.status(200).json(getCats());
+export const getAllCats = async (req, res) => {
+  try {
+    const cats = await listAllCats();
+    res.status(200).json(cats);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
 };
 
-export const getCatById = (req, res) => {
-  const id = parseInt(req.params.id);
-  const cat = getCat(id);
-  if (!cat) return res.status(404).json({message: 'Cat not found'});
-  res.status(200).json(cat);
+export const getCatById = async (req, res) => {
+  try {
+    const cat = await findCatById(req.params.id);
+    if (!cat) return res.status(404).json({message: 'Cat not found'});
+    res.status(200).json(cat);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
 };
 
-export const createCat = (req, res) => {
-  const newCat = addCat(req.body);
-  res.status(201).json(newCat);
+export const getCatsByUserId = async (req, res) => {
+  try {
+    const cats = await findCatsByUserId(req.params.id);
+    res.status(200).json(cats);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
 };
 
-export const updateCat = (req, res) => {
-  res.status(200).json({message: 'Cat item updated.'});
+export const createCat = async (req, res) => {
+  try {
+    const catData = {...req.body, filename: req.file?.filename || ''};
+    const newCat = await addCat(catData);
+    res.status(201).json(newCat);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
 };
 
-export const deleteCat = (req, res) => {
-  res.status(200).json({message: 'Cat item deleted.'});
+export const updateCat = async (req, res) => {
+  try {
+    const success = await modifyCat(req.body, req.params.id);
+    if (!success) return res.status(404).json({message: 'Cat not found'});
+    res.status(200).json({message: 'Cat updated'});
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+};
+
+export const deleteCat = async (req, res) => {
+  try {
+    const success = await removeCat(req.params.id);
+    if (!success) return res.status(404).json({message: 'Cat not found'});
+    res.status(200).json({message: 'Cat deleted'});
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
 };

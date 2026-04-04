@@ -7,6 +7,7 @@ import {
   createCat,
   updateCat,
   deleteCat,
+  getCatsByUserId,
 } from '../controllers/cat-controller.js';
 import {createThumbnail} from '../middlewares/upload.js';
 
@@ -25,6 +26,7 @@ const upload = multer({storage});
 
 router.get('/', getAllCats);
 router.get('/:id', getCatById);
+router.get('/user/:id', getCatsByUserId);
 router.post('/', upload.single('cat'), createThumbnail, createCat);
 router.put('/:id', updateCat);
 router.delete('/:id', deleteCat);
